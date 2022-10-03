@@ -9,6 +9,7 @@ public class Util {
     private static final String USERNAME_KEY = "db.username";
     private static final String PASSWORD_KEY = "db.password";
     private static Connection connection;
+
     private Util() {
 
     }
@@ -24,4 +25,6 @@ public class Util {
         }
         return connection;
     }
+
+
 }
