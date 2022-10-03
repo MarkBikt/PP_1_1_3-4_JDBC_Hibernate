@@ -8,8 +8,11 @@ public class Util {
     private static final String URL_KEY = "db.url";
     private static final String USERNAME_KEY = "db.username";
     private static final String PASSWORD_KEY = "db.password";
-    private Connection connection;
-    public Util() {
+    private static Connection connection;
+    private Util() {
+
+    }
+    public static Connection getConnection() {
         try {
             connection = DriverManager.getConnection(
                     PropertiesUtil.get(URL_KEY),
@@ -19,8 +22,6 @@ public class Util {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-    public Connection getConnection() {
         return connection;
     }
 }
