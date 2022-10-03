@@ -10,7 +10,13 @@ import java.util.List;
 public class UserDaoJDBCImpl implements UserDao {
     private Connection connection;
     public UserDaoJDBCImpl() {
-        connection = Util.getConnection();
+
+        try {
+            connection = Util.getConnection();
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void createUsersTable() {
@@ -22,7 +28,13 @@ public class UserDaoJDBCImpl implements UserDao {
                 """;
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             System.out.println("Не получилось создать таблицу");
         }
     }
@@ -31,7 +43,13 @@ public class UserDaoJDBCImpl implements UserDao {
         String sql ="DROP TABLE IF EXISTS usersdb.users";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             System.out.println("Не получилось удалить таблицу");
         }
 
@@ -45,8 +63,14 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setString(2,lastName);
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
+            connection.commit();
             System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException(e);
         }
     }
@@ -56,12 +80,19 @@ public class UserDaoJDBCImpl implements UserDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException(e);
         }
     }
 
     public List<User> getAllUsers() {
+
         String sql = "SELECT * FROM usersdb.users";
         ResultSet resultSet;
         List<User> userList = new ArrayList<>();
@@ -85,7 +116,13 @@ public class UserDaoJDBCImpl implements UserDao {
         String sql ="TRUNCATE TABLE usersdb.users";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             System.out.println("Не получилось удалить таблицу");
         }
     }
