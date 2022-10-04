@@ -47,8 +47,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void dropUsersTable() {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            Query query = session.createSQLQuery(DROP_TABLE).addEntity(User.class);
-            query.executeUpdate();
+            session.createSQLQuery(DROP_TABLE).addEntity(User.class).executeUpdate();
             session.getTransaction().commit();
         }
     }
@@ -57,8 +56,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            User user = new User(name, lastName, age);
-            session.save(user);
+            session.save(new User(name, lastName, age));
             session.getTransaction().commit();
             System.out.println("User с именем – " + name + " добавлен в базу данных");
         }
@@ -79,8 +77,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public List<User> getAllUsers() {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            Query query = session.createSQLQuery(GET_ALL).addEntity(User.class);
-            List<User> users = query.list();
+            List<User> users = session.createSQLQuery(GET_ALL).addEntity(User.class).list();
             session.getTransaction().commit();
             return users;
         }
@@ -90,8 +87,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void cleanUsersTable() {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            Query query = session.createSQLQuery(CLEAN_TABLE).addEntity(User.class);
-            query.executeUpdate();
+            session.createSQLQuery(CLEAN_TABLE).addEntity(User.class).executeUpdate();
             session.getTransaction().commit();
         }
     }
