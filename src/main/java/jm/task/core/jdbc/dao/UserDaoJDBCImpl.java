@@ -26,7 +26,8 @@ public class UserDaoJDBCImpl implements UserDao {
                 WHERE id=?
                 """;
     private static final String GET_ALL = """
-                SELECT * FROM usersdb.users
+                SELECT id, name, lastName, age 
+                FROM usersdb.users
                 """;
     private static final String CLEAN_TABLE = """
                 TRUNCATE TABLE usersdb.users
@@ -104,10 +105,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        ResultSet resultSet;
-        List<User> userList = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
-            resultSet = statement.executeQuery(GET_ALL);
+            List<User> userList = new ArrayList<>();
+            ResultSet resultSet = statement.executeQuery(GET_ALL);
             User user;
             while (resultSet.next()) {
                 user = new User(resultSet.getString("name"),
@@ -116,10 +116,10 @@ public class UserDaoJDBCImpl implements UserDao {
                 user.setId(resultSet.getLong("id"));
                 userList.add(user);
             }
+            return userList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return userList;
     }
 
     public void cleanUsersTable() {
