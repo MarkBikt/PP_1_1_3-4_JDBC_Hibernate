@@ -3,8 +3,7 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
+import org.hibernate.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,102 +20,88 @@ public class UserDaoHibernateImpl implements UserDao {
                 """;
     private static final String CLEAN_TABLE = "delete from User";
     private static final String GET_ALL = "from User";
-    private static SessionFactory sessionFactory;
-    private static Session session;
+
+
     public UserDaoHibernateImpl() {
-        sessionFactory = Util.getSessionFactory();
+
     }
 
 
     @Override
     public void createUsersTable() {
-        try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.getTransaction();
+            transaction.begin();
             session.createSQLQuery(CREATE_TABLE).addEntity(User.class).executeUpdate();
-            session.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (session != null) {
-                session.getTransaction().rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
+            if (transaction != null) {
+                transaction.rollback();
             }
         }
     }
 
     @Override
     public void dropUsersTable() {
-        try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.getTransaction();
+            transaction.begin();
             session.createSQLQuery(DROP_TABLE).addEntity(User.class).executeUpdate();
-            session.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (session != null) {
-                session.getTransaction().rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
+            if (transaction != null) {
+                transaction.rollback();
             }
         }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.getTransaction();
+            transaction.begin();
             session.save(new User(name, lastName, age));
             session.getTransaction().commit();
             System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (RuntimeException e) {
-            if (session != null) {
-                session.getTransaction().rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
+            if (transaction != null) {
+                transaction.rollback();
             }
         }
+
     }
 
     @Override
     public void removeUserById(long id) {
-        try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.getTransaction();
+            transaction.begin();
             session.delete(session.get(User.class, id));
-            session.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
             System.out.println("Пользователь с таким id не найден!");
-            if (session != null) {
-                session.getTransaction().rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
+            if (transaction != null) {
+                transaction.rollback();
             }
         }
     }
 
     @Override
     public List<User> getAllUsers() {
+        Transaction transaction = null;
         List<User> users = new ArrayList<>();
-        try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.getTransaction();
+            transaction.begin();
             users = session.createQuery(GET_ALL).list();
-            session.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (session != null) {
-                session.getTransaction().rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
+            if (transaction != null) {
+                transaction.rollback();
             }
         }
         return users;
@@ -124,18 +109,15 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.getTransaction();
+            transaction.begin();
             session.createQuery(CLEAN_TABLE).executeUpdate();
-            session.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (session != null) {
-                session.getTransaction().rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
+            if (transaction != null) {
+                transaction.rollback();
             }
         }
     }
