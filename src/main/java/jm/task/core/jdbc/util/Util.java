@@ -44,9 +44,9 @@ public class Util {
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             Properties prop = new Properties();
-            prop.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/usersdb");
-            prop.setProperty("hibernate.connection.username", "root");
-            prop.setProperty("hibernate.connection.password", "Maxmotives-092794");
+            prop.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/usersdb");
+            prop.put("hibernate.connection.username", "root");
+            prop.put("hibernate.connection.password", "Maxmotives-092794");
             prop.put("hibernate.show_sql", "true");
             prop.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
             prop.put("hibernate.id.new_generator_mappings", "false");
