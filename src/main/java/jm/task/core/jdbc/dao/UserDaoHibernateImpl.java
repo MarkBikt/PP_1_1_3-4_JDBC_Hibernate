@@ -4,8 +4,6 @@ import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class UserDaoHibernateImpl implements UserDao {
     private static final String CLEAN_TABLE = "delete from User";
     private static final String GET_ALL = "from User";
     private static SessionFactory sessionFactory;
-    private static Session session = null;
+    private static Session session;
     public UserDaoHibernateImpl() {
         sessionFactory = Util.getSessionFactory();
     }
