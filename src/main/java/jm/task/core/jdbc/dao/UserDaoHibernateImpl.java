@@ -20,7 +20,7 @@ public class UserDaoHibernateImpl implements UserDao {
                 """;
     private static final String CLEAN_TABLE = "delete from User";
     private static final String GET_ALL = "from User";
-
+    private static Transaction transaction;
 
     public UserDaoHibernateImpl() {
 
@@ -29,7 +29,6 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.getTransaction();
             transaction.begin();
@@ -44,7 +43,6 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void dropUsersTable() {
-        Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.getTransaction();
             transaction.begin();
@@ -59,7 +57,6 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.getTransaction();
             transaction.begin();
@@ -76,7 +73,6 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.getTransaction();
             transaction.begin();
@@ -92,7 +88,6 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        Transaction transaction = null;
         List<User> users = new ArrayList<>();
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.getTransaction();
@@ -109,7 +104,6 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.getTransaction();
             transaction.begin();
